@@ -1,5 +1,11 @@
 <x-app-layout>
     <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center mb-6">
+            <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100">
+                NOTES
+            </h1>
+        </header>
+
         <form method="POST" action="{{ route('notes.store') }}" class="space-y-6 transform hover:scale-[1.01] transition-all duration-300">
             @csrf
             <div class="group relative">
@@ -45,14 +51,7 @@
                 <div class="flex justify-between items-center">
                     <div>
                         <span class="text-gray-800">{{ $note->user->name }}</span>
-                        <small class="ml-2 text-sm text-gray-600">{{ $note->created_at->format('j M Y, g:i a') }}</small>
-                    </div>
-                    <div>
-                        <span class="text-gray-800">{{ $note->user->name }}</span>
-                        <small class="ml-2 text-sm text-gray-600">{{ $note->created_at->format('j M Y, g:i a') }}</small>
-                        @unless ($note->created_at->eq($note->updated_at))
-                            <small class="text-sm text-gray-600"> &middot; {{ __('edited') }}</small>
-                        @endunless
+                        <small class="ml-2 text-sm text-gray-600">&middot; {{ $note->created_at->format('j M Y, g:i a') }}</small>
                     </div>
                     @if ($note->user->is(auth()->user()))
                         <x-dropdown>
@@ -67,6 +66,13 @@
                                 <x-dropdown-link :href="route('notes.edit', $note)">
                                     {{ __('Edit') }}
                                 </x-dropdown-link>
+                                <form method="POST" action="{{ route('notes.destroy', $note) }}">
+                                    @csrf
+                                    @method('delete')
+                                    <x-dropdown-link :href="route('notes.destroy', $note)" onclick="event.preventDefault(); this.closest('form').submit();">
+                                        {{ __('Delete') }}
+                                    </x-dropdown-link>
+                                </form>
                             </x-slot>
                         </x-dropdown>
                     @endif
