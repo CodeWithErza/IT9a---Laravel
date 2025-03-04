@@ -13,8 +13,12 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     </head>
     <body class="font-sans antialiased">
+        <div id="reload-bar" class="progress fixed-top" style="height: 5px; display: none;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-" role="progressbar" style="width: 100%"></div>
+        </div>
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             @include('layouts.navigation')
 
@@ -32,5 +36,14 @@
                 {{ $slot }}
             </main>
         </div>
+        <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+        <script>
+            document.addEventListener("htmx:beforeRequest", function() {
+                document.getElementById("reload-bar").style.display = "block";
+            });
+            document.addEventListener("htmx:afterRequest", function() {
+                document.getElementById("reload-bar").style.display = "none";
+            });
+        </script>
     </body>
 </html>

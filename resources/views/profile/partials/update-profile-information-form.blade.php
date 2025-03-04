@@ -9,11 +9,11 @@
         </p>
     </header>
 
-    <form id="send-verification" method="post" action="{{ route('verification.send') }}">
+    <form id="send-verification" method="post" hx-post="{{ route('verification.send') }}" hx-boost="true" hx-target="body" hx-push-url="{{ route('profile.edit') }}">
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form hx-post="{{ route('profile.update') }}" hx-boost="true" hx-target="body" hx-push-url="{{ route('profile.edit') }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 

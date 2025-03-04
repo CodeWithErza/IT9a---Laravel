@@ -9,7 +9,7 @@
         </p>
     </header>
 
-    <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
+    <form hx-post="{{ route('password.update') }}" hx-boost="true" hx-target="body" hx-push-url="{{ route('profile.edit') }}" class="mt-6 space-y-6">
         @csrf
         @method('put')
 

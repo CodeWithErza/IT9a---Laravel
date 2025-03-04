@@ -6,7 +6,11 @@
             </h1>
         </header>
 
-        <form method="POST" action="{{ route('notes.store') }}" class="space-y-6 transform hover:scale-[1.01] transition-all duration-300">
+        <form 
+            hx-post="{{ route('notes.store') }}" 
+            hx-target="body" 
+            hx-swap="outerHTML"
+            class="space-y-6 transform hover:scale-[1.01] transition-all duration-300">
             @csrf
             <div class="group relative">
                 <input
@@ -33,12 +37,12 @@
             </div>
 
             <div class="flex items-center justify-end space-x-4">
-                <button type="reset" class="px-4 py-2 text-gray-500 hover:text-gray-700 transition-colors duration-300">
+                <button type="reset" class="px-4 py-2 text-gray-500 hover:text-gray-700 transition-colors duration-300 border-2 border-gray-300 rounded-lg shadow-md hover:shadow-lg">
                     Clear ✨
                 </button>
-                <x-primary-button class="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-300 rounded-xl px-6 py-3 text-lg font-medium">
+                <button type="submit" class="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-300 rounded-xl px-6 py-3 text-lg font-medium text-white border-2 border-indigo-500 shadow-md hover:shadow-lg">
                     Save Note 📝
-                </x-primary-button>
+                </button>
             </div>
         </form>
         <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
@@ -63,14 +67,21 @@
                                 </button>
                             </x-slot>
                             <x-slot name="content">
-                                <x-dropdown-link :href="route('notes.edit', $note)">
+                                <x-dropdown-link :href="route('notes.edit', $note)"
+                                    hx-boost="true"
+                                    hx-push-url="true">
                                     {{ __('Edit') }}
                                 </x-dropdown-link>
-                                <form method="POST" action="{{ route('notes.destroy', $note) }}">
+                                <form 
+                                    hx-delete="{{ route('notes.destroy', $note) }}"
+                                    hx-target="body" 
+                                    hx-swap="outerHTML">
                                     @csrf
                                     @method('delete')
-                                    <x-dropdown-link :href="route('notes.destroy', $note)" onclick="event.preventDefault(); this.closest('form').submit();">
-                                        {{ __('Delete') }}
+                                    <x-dropdown-link>
+                                        <button type="submit">
+                                            {{ __('Delete') }}
+                                        </button>
                                     </x-dropdown-link>
                                 </form>
                             </x-slot>

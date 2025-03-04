@@ -1,6 +1,10 @@
 <x-app-layout>
     <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
-        <form method="POST" action="{{ route('notes.update', $note) }}">
+        <form 
+            hx-post="{{ route('notes.update', $note) }}"
+            hx-target="body" 
+            hx-swap="outerHTML"
+            hx-push-url="{{ route('notes.index') }}">
             @csrf
             @method('patch')
             
@@ -28,8 +32,13 @@
             </div>
 
             <div class="mt-4 space-x-2">
-                <x-primary-button>{{ __('Save') }}</x-primary-button>
-                <a href="{{ route('notes.index') }}" class="inline-flex items-center px-4 py-2 text-sm text-gray-600 hover:text-gray-900">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                    {{ __('Save') }}
+                </button>
+                <a href="{{ route('notes.index') }}" 
+                   class="inline-flex items-center px-4 py-2 text-sm text-gray-600 hover:text-gray-900"
+                   hx-boost="true"
+                   hx-push-url="{{ route('notes.index') }}">
                     {{ __('Cancel') }}
                 </a>
             </div>

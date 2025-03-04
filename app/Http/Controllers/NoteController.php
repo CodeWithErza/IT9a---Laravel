@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Note;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Http\Response; 
 use Illuminate\Support\Facades\Gate;
-
-
 
 class NoteController extends Controller
 {
@@ -35,7 +30,7 @@ class NoteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): View
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -44,7 +39,9 @@ class NoteController extends Controller
      
         $request->user()->notes()->create($validated);
      
-        return redirect(route('notes.index'));
+        return view('notes.index', [
+            'notes' => Note::with('user')->latest()->get(),
+        ]);
     }
 
     /**
@@ -64,12 +61,13 @@ class NoteController extends Controller
 
         return view('notes.edit', [
             'note' => $note,
-        ]);    }
+        ]);    
+    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Note $note): RedirectResponse
+    public function update(Request $request, Note $note): View
     {
         Gate::authorize('update', $note);
 
@@ -80,18 +78,22 @@ class NoteController extends Controller
 
         $note->update($validated);
 
-        return redirect(route('notes.index'));
+        return view('notes.index', [
+            'notes' => Note::with('user')->latest()->get(),
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Note $note): RedirectResponse
+    public function destroy(Note $note): View
     {
         Gate::authorize('delete', $note);
 
         $note->delete();
 
-        return redirect(route('notes.index'));
+        return view('notes.index', [
+            'notes' => Note::with('user')->latest()->get(),
+        ]);
     }
 }
