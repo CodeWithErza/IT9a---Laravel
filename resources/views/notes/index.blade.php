@@ -75,9 +75,10 @@
                                 <form 
                                     hx-delete="{{ route('notes.destroy', $note) }}"
                                     hx-target="body" 
-                                    hx-swap="outerHTML">
+                                    hx-swap="outerHTML"
+                                    hx-indicator="#progress-bar">
                                     @csrf
-                                    @method('delete')
+                                    @method('DELETE')
                                     <x-dropdown-link>
                                         <button type="submit">
                                             {{ __('Delete') }}
@@ -96,6 +97,9 @@
 </div>
     </div>
 
+    <!-- Add progress bar -->
+    <div id="progress-bar" class="htmx-indicator fixed top-0 left-0 w-full h-1 bg-indigo-500 transform origin-left scale-x-0 transition-transform duration-300"></div>
+
     @push('scripts')
     <script>
         // Add a fun animation when focusing on input fields
@@ -107,6 +111,25 @@
             input.addEventListener('blur', () => {
                 input.style.transform = 'translateY(0)';
             });
+        });
+
+        // Progress bar animation
+        document.body.addEventListener('htmx:beforeRequest', function() {
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.transform = 'scaleX(0.3)';
+        });
+
+        document.body.addEventListener('htmx:beforeSwap', function() {
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.transform = 'scaleX(0.9)';
+        });
+
+        document.body.addEventListener('htmx:afterSwap', function() {
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.transform = 'scaleX(1)';
+            setTimeout(() => {
+                progressBar.style.transform = 'scaleX(0)';
+            }, 200);
         });
     </script>
     @endpush
